@@ -1,0 +1,45 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+            <img src="img/logo.png" alt="Syllabus Logo" height="40" class="me-2">
+            <span class="fw-bold">Syllabus</span>
+        </a>
+
+        <!-- Bouton Toggle (Mobile) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Liens de navigation -->
+        <nav class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/programmes.html">Programmes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/syllabus.html">Syllabus</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/fiches-academiques.html">Fiches Académiques</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/contact.html">Contact</a>
+                </li>
+                <!-- Bouton de Déconnexion -->
+                <li class="nav-item">
+                    <button class="btn btn-outline-light ms-3" id="logoutBtn">Se Déconnecter</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script>
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        // Suppression du token (exemple avec localStorage)
+        localStorage.removeItem('authToken');
+        window.location.href = '../index.html'; // Redirige vers l'accueil
+    });
+</script>

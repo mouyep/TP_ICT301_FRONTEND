@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Niveaux d'Études</title>
+    <!-- Inclusion des feuilles de style CSS et autres ressources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Styles globaux si nécessaires -->
+</head>
+<body>
+    <!-- Inclure le sidebar -->
+    <div id="sidebar-container">
+        <div id="sidebar"></div>
+    </div>
+
+    <!-- Contenu principal de la page -->
+    <div class="content-container">
+        <!-- Inclure l'en-tête -->
+        <div id="header-container">
+            <div id="header"></div>
+        </div>
+
+        <div class="container mt-5">
+            <h2 class="mb-4">Liste des Niveaux d'Études</h2>
+            
+            <!-- Récupérer l'ID de la filière depuis l'URL -->
+            <div id="filiere-info">
+                <h5 id="filiereName">Filière: </h5>
+            </div>
+
+            <!-- Formulaire d'ajout d'un niveau -->
+            <div class="mb-3">
+                <h5>Créer un nouveau Niveau</h5>
+                <form id="addNiveauForm">
+                    <div class="mb-3">
+                        <label for="niveauName" class="form-label">Nom du Niveau</label>
+                        <input type="text" class="form-control" id="niveauName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="niveauDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="niveauDescription" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3" id="filiereSelection">
+                        <!-- Liste déroulante ou filière transmise via URL -->
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="addNiveau()">Ajouter le Niveau</button>
+                </form>
+            </div>
+
+            <h5>Liste des Niveaux</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom du Niveau</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="niveau-table-body">
+                    <!-- Lignes de niveaux viendront ici -->
+                    <!-- Exemple d'une ligne de niveau -->
+                    <tr>
+                        <td>1</td>
+                        <td>Licence 1</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="editNiveau(1)">Modifier</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteNiveau(1)">Supprimer</button>
+                            <button class="btn btn-success btn-sm" onclick="addComposanteNiveau(1)">Ajouter Composante</button>
+                        </td>
+                    </tr>
+                    <!-- Fin des lignes de niveaux -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Inclure le footer -->
+    <div id="footer-container">
+        <div id="footer"></div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script src="api.js"></script> <!-- Script de gestion des appels API -->
+    <script>
+        // Fonction pour récupérer l'ID de la filière depuis l'URL
+        function getFiliereIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('filiereId');
+        }
+
+        // Fonction d'ajout d'un niveau
+        function addNiveau() {
+            const niveauName = document.getElementById("niveauName").value;
+            const niveauDescription = document.getElementById("niveauDescription").value;
+            const filiereId = document.getElementById("filiereSelection").value;
+
+            // Appeler l'API pour ajouter le niveau
+            $.ajax({
+                url: 'http://localhost:9000/api/niveaux', // URL de votre API pour ajouter un niveau
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: niveauName,
+                    description: niveauDescription,
+                    filiereId: filiereId
+                }),
+                success: function(response) {
+                    alert("Niveau ajouté avec succès !");
+                    location.reload(); // Recharger la page pour afficher le nouveau niveau
+                },
+                error: function() {
+                    alert("Erreur lors de l'ajout du niveau.");
+                }
+            });
+        }
+
+        // Fonction pour modifier un niveau
+        function editNiveau(id) {
+            // Logique pour modifier un niveau, par exemple ouvrir un modal avec les informations existantes
+            alert("Modification du niveau avec ID: " + id);
+        }
+
+        // Fonction pour supprimer un niveau
+        function deleteNiveau(id) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce niveau ?")) {
+                // Appeler l'API pour supprimer le niveau
+                $.ajax({
+                    url: `http://localhost:9000/api/niveaux/${id}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        alert("Niveau supprimé avec succès !");
+                        location.reload(); // Recharger la page pour mettre à jour la liste des niveaux
+                    },
+                    error: function() {
+                        alert("Erreur lors de la suppression du niveau.");
+                    }
+                });
+            }
+        }
+
+        // Fonction pour ajouter une composante à un niveau
+        function addComposanteNiveau(niveauId) {
+            // Logique pour ajouter une composante au niveau (semestre, trimestre, etc.)
+            alert("Ajout de composante au niveau avec ID: " + niveauId);
+            // Vous pouvez créer un formulaire ou un modal pour ajouter une composante à ce niveau
+        }
+
+        // Fonction pour charger la sélection de la filière
+        function loadFiliereSelection() {
+            const filiereId = getFiliereIdFromUrl();
+            const filiereSelection = document.getElementById("filiereSelection");
+
+            if (filiereId) {
+                // Si l'ID de la filière est passé dans l'URL
+                filiereSelection.innerHTML = `<input type="hidden" value="${filiereId}" />`; // Champ caché
+                document.getElementById("filiereName").textContent = `Filière: ${filiereId}`; // Affichage du nom de la filière
+            } else {
+                // Si aucun ID de filière n'est passé, afficher la liste déroulante des filières
+                $.ajax({
+                    url: 'http://localhost:9000/api/filieres', // URL pour récupérer la liste des filières
+                    type: 'GET',
+                    success: function(response) {
+                        let options = '<label for="filiereSelection" class="form-label">Sélectionnez une Filière</label><select class="form-control" id="filiereSelection"><option value="" disabled selected>Choisir une filière</option>';
+                        response.forEach(filiere => {
+                            options += `<option value="${filiere.id}">${filiere.name}</option>`;
+                        });
+                        options += '</select>';
+                        filiereSelection.innerHTML = options;
+                    },
+                    error: function() {
+                        alert("Erreur lors du chargement des filières.");
+                    }
+                });
+            }
+        }
+
+        // Charger la sélection de la filière au chargement de la page
+        window.onload = loadFiliereSelection;
+    </script>
+</body>
+</html>

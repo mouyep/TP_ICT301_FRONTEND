@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'accueil - Syllabus</title>
+
+    <!-- Liens CDN pour Bootstrap, Font Awesome et Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin-left: 250px; /* Pour faire de la place pour la sidebar */
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content {
+            margin-left: 270px; /* Décalage pour la sidebar */
+            padding: 40px 15px;
+        }
+
+        .btn-primary {
+            background-color: #28a745; /* Vert de la charte */
+            border-color: #28a745;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+
+        /* Card for different roles */
+        .role-card {
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .role-card h4 {
+            color: #007bff;
+        }
+
+        /* Responsivité pour sidebar */
+        @media (max-width: 992px) {
+            body {
+                margin-left: 0;
+            }
+            #sidebar {
+                width: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0;
+            }
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Inclusion de la Sidebar -->
+    <div id="sidebar">
+        <!-- Inclure le sidebar ici -->
+        <!-- Exemple avec Thymeleaf : -->
+        <!-- th:replace="fragments/sidebar :: sidebar" -->
+        <!-- Pour une autre solution modulaire selon votre stack, intégrez le code approprié -->
+    </div>
+
+    <!-- Inclusion du Header -->
+    <header th:replace="~{header.html}">
+        <!-- Inclure le header ici -->
+        <!-- Exemple avec Thymeleaf : -->
+        <!-- th:replace="fragments/header :: header" -->
+    </header>
+
+    <!-- Contenu Principal -->
+    <div class="content">
+        <div class="container">
+            <h1>Bienvenue sur Syllabus</h1>
+            <p>Choisissez une rubrique en fonction de votre rôle et commencez à gérer vos programmes, syllabus, fiches académiques et plus encore.</p>
+            
+            <!-- Cards pour chaque rôle avec des actions -->
+            <div class="row">
+                <!-- Section Étudiant -->
+                <div class="col-md-4">
+                    <div class="role-card">
+                        <h4>Étudiant</h4>
+                        <p>Consultez vos unités d'enseignement et leurs rubriques, accédez à vos syllabus et gérez vos fiches académiques.</p>
+                        <a href="pages/syllabus.html" class="btn btn-primary">Voir mes UE et Syllabus</a>
+                    </div>
+                </div>
+
+                <!-- Section Enseignant -->
+                <div class="col-md-4">
+                    <div class="role-card">
+                        <h4>Enseignant</h4>
+                        <p>Consultez vos unités d'enseignement attribuées, gérez les rubriques pour les différentes filières.</p>
+                        <a href="pages/programmes.html" class="btn btn-primary">Voir mes UE et Rubriques</a>
+                    </div>
+                </div>
+
+                <!-- Section Administrateur -->
+                <div class="col-md-4">
+                    <div class="role-card">
+                        <h4>Administrateur</h4>
+                        <p>Créez des unités d'enseignement, attribuez-les aux enseignants, gérez les départements, filières et niveaux d'études.</p>
+                        <a href="pages/utilisateurs.html" class="btn btn-primary">Gérer les Utilisateurs</a>
+                        <a href="pages/programmes.html" class="btn btn-primary mt-2">Gérer les Programmes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclusion du Footer -->
+    <footer>
+        <!-- Inclure le footer ici -->
+        <!-- Exemple avec Thymeleaf : -->
+        <!-- th:replace="fragments/footer :: footer" -->
+    </footer>
+
+    <!-- Scripts Bootstrap et Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Départements</title>
+    <!-- Inclusion des feuilles de style CSS et autres ressources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Styles globaux si nécessaires -->
+</head>
+<body>
+    <!-- Inclure le sidebar -->
+    <div id="sidebar-container">
+        <!-- Sidebar (importé depuis sidebar.html) -->
+        <div id="sidebar"></div>
+    </div>
+
+    <!-- Contenu principal de la page -->
+    <div class="content-container">
+        <!-- Inclure l'en-tête -->
+        <div id="header-container">
+            <div id="header"></div>
+        </div>
+
+        <div class="container mt-5">
+            <h2 class="mb-4">Liste des Départements</h2>
+            <!-- Tableau des départements -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom du Département</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="departement-table-body">
+                    <!-- Lignes de départements viendront ici -->
+                    <!-- Exemple d'une ligne de département -->
+                    <tr>
+                        <td>1</td>
+                        <td>Informatique</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="editDepartment(1)">Modifier</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDepartment(1)">Supprimer</button>
+                            <a href="filiere.html?departementId=1" class="btn btn-primary btn-sm">Ajouter une Filière</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Mathematiques</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="editDepartment(2)">Modifier</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDepartment(2)">Supprimer</button>
+                            <a href="filiere.html?departementId=2" class="btn btn-primary btn-sm">Ajouter une Filière</a>
+                        </td>
+                    </tr>
+                    <!-- Fin des lignes de départements -->
+                </tbody>
+            </table>
+
+            <!-- Bouton pour ajouter un nouveau département -->
+            <div class="text-end">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Ajouter un Département</button>
+            </div>
+
+            <!-- Modal pour ajouter un département -->
+            <div class="modal fade" id="addDepartmentModal" tabindex="-1" aria-labelledby="addDepartmentModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addDepartmentModalLabel">Ajouter un Nouveau Département</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addDepartmentForm">
+                                <div class="mb-3">
+                                    <label for="departmentName" class="form-label">Nom du Département</label>
+                                    <input type="text" class="form-control" id="departmentName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="departmentDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="departmentDescription" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-primary" onclick="addDepartment()">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclure le footer -->
+    <div id="footer-container">
+        <div id="footer"></div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script src="api.js"></script> <!-- Script de gestion des appels API -->
+    <script>
+        // Fonction pour ajouter un département
+        function addDepartment() {
+            var departmentName = document.getElementById("departmentName").value;
+            var departmentDescription = document.getElementById("departmentDescription").value;
+
+            // Appeler l'API pour ajouter le département
+            $.ajax({
+                url: 'http://localhost:9000/api/departments', // URL de votre API pour ajouter un département
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: departmentName,
+                    description: departmentDescription
+                }),
+                success: function(response) {
+                    alert("Département ajouté avec succès !");
+                    location.reload(); // Recharger la page pour afficher le nouveau département
+                },
+                error: function() {
+                    alert("Erreur lors de l'ajout du département.");
+                }
+            });
+        }
+
+        // Fonction pour modifier un département
+        function editDepartment(id) {
+            // Logique pour modifier un département, par exemple ouvrir un modal avec les informations existantes
+            alert("Modification du département avec ID: " + id);
+        }
+
+        // Fonction pour supprimer un département
+        function deleteDepartment(id) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce département ?")) {
+                // Appeler l'API pour supprimer le département
+                $.ajax({
+                    url: `http://localhost:9000/api/departments/${id}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        alert("Département supprimé avec succès !");
+                        location.reload(); // Recharger la page pour mettre à jour la liste des départements
+                    },
+                    error: function() {
+                        alert("Erreur lors de la suppression du département.");
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

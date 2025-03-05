@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Filières</title>
+    <!-- Inclusion des feuilles de style CSS et autres ressources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Styles globaux si nécessaires -->
+</head>
+<body>
+    <!-- Inclure le sidebar -->
+    <div id="sidebar-container">
+        <div id="sidebar"></div>
+    </div>
+
+    <!-- Contenu principal de la page -->
+    <div class="content-container">
+        <!-- Inclure l'en-tête -->
+        <div id="header-container">
+            <div id="header"></div>
+        </div>
+
+        <div class="container mt-5">
+            <h2 class="mb-4">Liste des Filières</h2>
+            
+            <!-- Récupérer l'ID du département depuis l'URL -->
+            <div id="department-info">
+                <h5 id="departmentName">Département: </h5>
+            </div>
+
+            <!-- Formulaire d'ajout d'une filière -->
+            <div class="mb-3">
+                <h5>Créer une nouvelle Filière</h5>
+                <form id="addFiliereForm">
+                    <div class="mb-3">
+                        <label for="filiereName" class="form-label">Nom de la Filière</label>
+                        <input type="text" class="form-control" id="filiereName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filiereDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="filiereDescription" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3" id="departmentSelection">
+                        <!-- Liste déroulante ou département transmis via URL -->
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="addFiliere()">Ajouter la Filière</button>
+                </form>
+            </div>
+
+            <h5>Liste des Filières</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom de la Filière</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="filiere-table-body">
+                    <!-- Lignes de filières viendront ici -->
+                    <!-- Exemple d'une ligne de filière -->
+                    <tr>
+                        <td>1</td>
+                        <td>Informatique</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="editFiliere(1)">Modifier</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteFiliere(1)">Supprimer</button>
+                            <a href="niveaux.html?filiereId=1" class="btn btn-success btn-sm">Ajouter des Niveaux</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Mathématiques</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="editFiliere(2)">Modifier</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteFiliere(2)">Supprimer</button>
+                            <a href="niveaux.html?filiereId=2" class="btn btn-success btn-sm">Ajouter des Niveaux</a>
+                        </td>
+                    </tr>
+                    <!-- Fin des lignes de filières -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Inclure le footer -->
+    <div id="footer-container">
+        <div id="footer"></div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script src="api.js"></script> <!-- Script de gestion des appels API -->
+    <script>
+        // Fonction pour récupérer l'ID du département depuis l'URL
+        function getDepartmentIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('departementId');
+        }
+
+        // Fonction d'ajout d'une filière
+        function addFiliere() {
+            const filiereName = document.getElementById("filiereName").value;
+            const filiereDescription = document.getElementById("filiereDescription").value;
+            const departmentId = document.getElementById("departmentSelection").value;
+
+            // Appeler l'API pour ajouter la filière
+            $.ajax({
+                url: 'http://localhost:9000/api/filieres', // URL de votre API pour ajouter une filière
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: filiereName,
+                    description: filiereDescription,
+                    departmentId: departmentId
+                }),
+                success: function(response) {
+                    alert("Filière ajoutée avec succès !");
+                    location.reload(); // Recharger la page pour afficher la nouvelle filière
+                },
+                error: function() {
+                    alert("Erreur lors de l'ajout de la filière.");
+                }
+            });
+        }
+
+        // Fonction pour modifier une filière
+        function editFiliere(id) {
+            // Logique pour modifier une filière, par exemple ouvrir un modal avec les informations existantes
+            alert("Modification de la filière avec ID: " + id);
+        }
+
+        // Fonction pour supprimer une filière
+        function deleteFiliere(id) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer cette filière ?")) {
+                // Appeler l'API pour supprimer la filière
+                $.ajax({
+                    url: `http://localhost:9000/api/filieres/${id}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        alert("Filière supprimée avec succès !");
+                        location.reload(); // Recharger la page pour mettre à jour la liste des filières
+                    },
+                    error: function() {
+                        alert("Erreur lors de la suppression de la filière.");
+                    }
+                });
+            }
+        }
+
+        // Fonction pour charger le département sélectionné ou l'ID du département transmis
+        function loadDepartmentSelection() {
+            const departmentId = getDepartmentIdFromUrl();
+            const departmentSelection = document.getElementById("departmentSelection");
+
+            if (departmentId) {
+                // Si l'ID du département est passé dans l'URL
+                departmentSelection.innerHTML = `<input type="hidden" value="${departmentId}" />`; // Le champ sera caché
+                document.getElementById("departmentName").textContent = `Département: ${departmentId}`; // Afficher le département
+            } else {
+                // Si aucun département n'est passé, afficher la liste déroulante des départements
+                $.ajax({
+                    url: 'http://localhost:9000/api/departments', // URL pour récupérer la liste des départements
+                    type: 'GET',
+                    success: function(response) {
+                        let options = '<label for="departmentSelection" class="form-label">Sélectionnez un Département</label><select class="form-control" id="departmentSelection"><option value="" disabled selected>Choisir un département</option>';
+                        response.forEach(department => {
+                            options += `<option value="${department.id}">${department.name}</option>`;
+                        });
+                        options += '</select>';
+                        departmentSelection.innerHTML = options;
+                    },
+                    error: function() {
+                        alert("Erreur lors du chargement des départements.");
+                    }
+                });
+            }
+        }
+
+        // Charger les départements au chargement de la page
+        window.onload = loadDepartmentSelection;
+    </script>
+</body>
+</html>

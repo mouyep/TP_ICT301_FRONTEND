@@ -1,0 +1,420 @@
+/* --- RESET STYLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* --- GLOBAL STYLES --- */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #007bff; /* Couleur principale */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style-type: none;
+}
+
+/* --- SIDEBAR --- */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    padding-top: 56px;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+#sidebar .nav-item .nav-link {
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#sidebar .nav-item .nav-link:hover,
+#sidebar .nav-item .nav-link.active {
+    background-color: #007bff;
+    border-radius: 5px;
+    color: white;
+}
+
+/* --- MAIN CONTENT --- */
+.content {
+    margin-left: 250px;
+    padding: 40px 20px;
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.content p {
+    font-size: 1.125rem;
+    margin-bottom: 30px;
+}
+
+/* --- CARDS FOR ROLES --- */
+.role-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.role-card h4 {
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.role-card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.role-card .btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.role-card .btn:hover {
+    background-color: #218838;
+}
+
+/* --- HEADER STYLES --- */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40;
+    color: white;
+    padding: 15px;
+    z-index: 999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+/* --- FOOTER STYLES --- */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 992px) {
+    body {
+        margin-left: 0;
+    }
+
+    #sidebar {
+        width: 220px;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .role-card {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding-top: 0;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .role-card {
+        margin-bottom: 15px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    footer p {
+        font-size: 0.75rem;
+    }
+}
+
+/* --- BUTTONS --- */
+.btn {
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* --- ADDITIONAL STYLES --- */
+.container {
+    padding-top: 56px; /* Pour éviter que le contenu soit masqué sous le header */
+}
+
+
+
+
+
+
+
+/* ============================================================
+   RESET ET BASE
+============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 16px;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff; /* Blanc (50%) */
+    color: #333333; /* Nuances gris-noir (18%) */
+  }
+  
+  /* ============================================================
+     LIENS & TYPOGRAPHIE
+  ============================================================ */
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #007bff; /* Bleu (10%) */
+    margin-bottom: 1rem;
+  }
+  
+  /* ============================================================
+     CONTENEURS & DISPOSITIONS
+  ============================================================ */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  /* ============================================================
+     SIDEBAR
+  ============================================================ */
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #343a40; /* Fond sombre */
+    color: #ffffff;
+    padding-top: 60px;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  #sidebar .nav-link {
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    display: block;
+  }
+  
+  #sidebar .nav-link:hover,
+  #sidebar .nav-link.active {
+    background-color: #007bff; /* Bleu (10%) */
+    border-radius: 0.25rem;
+  }
+  
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    width: calc(100% - 250px);
+    background-color: #343a40; /* Fond sombre */
+    color: #ffffff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  /* ============================================================
+     FOOTER
+  ============================================================ */
+  footer {
+    background-color: #343a40; /* Fond sombre */
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+  }
+  
+  /* ============================================================
+     BUTTONS
+  ============================================================ */
+  .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #28a745; /* Vert (10%) */
+    color: #ffffff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #218838;
+  }
+  
+  .btn-secondary {
+    background-color: #fd7e14; /* Orange (10%) */
+    color: #ffffff;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #e06c00;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545; /* Rouge (2%) */
+    color: #ffffff;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  
+  /* ============================================================
+     CARTES ET FORMULAIRES
+  ============================================================ */
+  .card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 500;
+  }
+  
+  .card-body {
+    padding: 1.25rem;
+  }
+  
+  .form-control {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+  }
+  
+  /* ============================================================
+     TABLEAUX
+  ============================================================ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  
+  table th,
+  table td {
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid #dee2e6;
+  }
+  
+  table th {
+    background-color: #f8f9fa;
+  }
+  
+  /* ============================================================
+     RESPONSIVE DESIGN
+  ============================================================ */
+  @media (max-width: 992px) {
+    #sidebar {
+      width: 220px;
+    }
+    header {
+      left: 220px;
+      width: calc(100% - 220px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    #sidebar, header {
+      position: relative;
+      width: 100%;
+      left: 0;
+    }
+    header {
+      margin-bottom: 1rem;
+    }
+  }
+  

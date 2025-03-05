@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Unités d'Enseignement</title>
+  <!-- CDN Bootstrap et Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4">Gestion des Unités d'Enseignement</h2>
+    
+    <!-- Formulaire d'ajout d'une unité d'enseignement -->
+    <div class="mb-4">
+      <h5>Ajouter une Unité d'Enseignement</h5>
+      <form id="addUniteForm">
+        <div class="mb-3">
+          <label for="uniteName" class="form-label">Nom de l'Unité</label>
+          <input type="text" class="form-control" id="uniteName" required>
+        </div>
+        <div class="mb-3">
+          <label for="uniteDescription" class="form-label">Description</label>
+          <textarea class="form-control" id="uniteDescription" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="rubrique" class="form-label">Rubrique</label>
+          <select class="form-control" id="rubrique" required>
+            <option value="coursMagistral">Cours Magistral</option>
+            <option value="td">Travaux Dirigés (TD)</option>
+            <option value="tp">Travaux Pratiques (TP)</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="composante" class="form-label">Composante de Niveau</label>
+          <select class="form-control" id="composante" required>
+            <!-- Vous pouvez adapter ces options selon vos données réelles -->
+            <option value="" disabled selected>Choisir une composante</option>
+            <option value="semestre1">Semestre 1</option>
+            <option value="semestre2">Semestre 2</option>
+            <option value="trimestre1">Trimestre 1</option>
+            <option value="trimestre2">Trimestre 2</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="enseignant" class="form-label">Enseignant</label>
+          <select class="form-control" id="enseignant" required>
+            <!-- Les enseignants seront chargés via l'API -->
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter l'Unité</button>
+      </form>
+    </div>
+
+    <!-- Tableau listant les unités d'enseignement -->
+    <h5>Liste des Unités d'Enseignement</h5>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nom de l'Unité</th>
+          <th>Description</th>
+          <th>Rubrique</th>
+          <th>Composante</th>
+          <th>Enseignant</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="unites-table-body">
+        <!-- Les lignes des unités seront ajoutées dynamiquement via JavaScript -->
+        <!-- Exemple d'une ligne : -->
+        <!--
+        <tr>
+          <td>1</td>
+          <td>Mathématiques</td>
+          <td>Description ici</td>
+          <td>Cours Magistral</td>
+          <td>Semestre 1</td>
+          <td>Professeur John</td>
+          <td>
+            <button class="btn btn-info btn-sm" onclick="editUnite(1)">Modifier</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUnite(1)">Supprimer</button>
+            <button class="btn btn-success btn-sm" onclick="assignComposante(1)">Attribuer composante</button>
+          </td>
+        </tr>
+        -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Scripts JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="api.js"></script> <!-- Script de gestion des appels API -->
+  <script>
+    // Fonction pour charger la liste des enseignants via l'API
+    function loadEnseignants() {
+      $.ajax({
+        url: 'http://localhost:9000/api/fake-teachers', // API pour récupérer les enseignants fictifs
+        type: 'GET',
+        success: function(response) {
+          let enseignantsOptions = '<option value="" disabled selected>Choisir un enseignant</option>';
+          response.forEach(enseignant => {
+            enseignantsOptions += `<option value="${enseignant.id}">${enseignant.name}</option>`;
+          });
+          $('#enseignant').html(enseignantsOptions);
+        },
+        error: function() {
+          alert("Erreur lors du chargement des enseignants.");
+        }
+      });
+    }
+
+    // Fonction pour ajouter une unité d'enseignement
+    $('#addUniteForm').on('submit', function(event) {
+      event.preventDefault();
+      const uniteName = $('#uniteName').val();
+      const uniteDescription = $('#uniteDescription').val();
+      const rubrique = $('#rubrique').val();
+      const composante = $('#composante').val();
+      const enseignantId = $('#enseignant').val();
+
+      $.ajax({
+        url: 'http://localhost:9000/api/unites', // URL pour ajouter l'unité
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          name: uniteName,
+          description: uniteDescription,
+          rubrique: rubrique,
+          composante: composante,
+          enseignantId: enseignantId
+        }),
+        success: function(response) {
+          alert("Unité d'enseignement ajoutée avec succès !");
+          location.reload(); // Recharger la page pour afficher la nouvelle unité
+        },
+        error: function() {
+          alert("Erreur lors de l'ajout de l'unité.");
+        }
+      });
+    });
+
+    // Chargement initial
+    $(document).ready(function() {
+      loadEnseignants();
+      // Vous pouvez également charger les unités existantes via une fonction similaire à loadEnseignants()
+    });
+
+    // Fonctions pour modifier, supprimer, ou attribuer une composante à une unité (à implémenter selon vos besoins)
+    function editUnite(id) {
+      alert("Modifier l'unité avec ID: " + id);
+    }
+
+    function deleteUnite(id) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer cette unité ?")) {
+        $.ajax({
+          url: `http://localhost:9000/api/unites/${id}`,
+          type: 'DELETE',
+          success: function(response) {
+            alert("Unité supprimée avec succès !");
+            location.reload();
+          },
+          error: function() {
+            alert("Erreur lors de la suppression de l'unité.");
+          }
+        });
+      }
+    }
+
+    function assignComposante(id) {
+      // Ici vous pouvez ouvrir un modal ou une interface pour changer la composante de l'unité
+      alert("Attribuer une nouvelle composante à l'unité avec ID: " + id);
+    }
+  </script>
+</body>
+</html>

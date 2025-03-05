@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Syllabus - Administration</title>
+  <!-- CDN Bootstrap et Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Votre fichier de styles globaux -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Vous pouvez inclure ici vos composants réutilisables (header, sidebar) -->
+  <div id="sidebar-container">
+    <!-- Exemple d'inclusion : <div th:replace="fragments/sidebar :: sidebar"></div> -->
+  </div>
+  
+  <div id="header-container">
+    <!-- Exemple d'inclusion : <div th:replace="fragments/header :: header"></div> -->
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="container mt-5" style="margin-left:260px;"> <!-- Décalage pour la sidebar -->
+    <h2 class="mb-4">Gestion des Syllabus</h2>
+
+    <!-- Formulaire d'ajout / modification d'un syllabus -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>Ajouter un nouveau Syllabus</h5>
+      </div>
+      <div class="card-body">
+        <form id="syllabusForm">
+          <div class="mb-3">
+            <label for="rubriqueSelect" class="form-label">Rubrique d'Unité d'Enseignement</label>
+            <select class="form-control" id="rubriqueSelect" required>
+              <option value="" disabled selected>Choisissez une rubrique</option>
+              <!-- Les rubriques seront chargées via AJAX -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="anneeAcademique" class="form-label">Année Académique</label>
+            <input type="number" class="form-control" id="anneeAcademique" placeholder="Ex : 2025" required>
+          </div>
+          <div class="mb-3">
+            <label for="contenu" class="form-label">Contenu du Syllabus</label>
+            <textarea class="form-control" id="contenu" rows="5" placeholder="Saisissez le contenu du syllabus..." required></textarea>
+          </div>
+          <input type="hidden" id="syllabusId" value="">
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tableau listant les syllabus existants -->
+    <div class="card">
+      <div class="card-header">
+        <h5>Liste des Syllabus</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Rubrique</th>
+              <th>Année Académique</th>
+              <th>Contenu</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="syllabusTableBody">
+            <!-- Les lignes seront générées dynamiquement via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inclusion du footer -->
+  <div id="footer-container">
+    <!-- Exemple d'inclusion : <div th:replace="fragments/footer :: footer"></div> -->
+  </div>
+
+  <!-- Scripts JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Charger la liste des rubriques pour le select
+    function loadRubriques() {
+      $.ajax({
+        url: 'http://localhost:9000/api/rubriques', // Adapté à votre API de rubriques d'unité
+        type: 'GET',
+        success: function(response) {
+          let options = '<option value="" disabled selected>Choisissez une rubrique</option>';
+          response.forEach(rubrique => {
+            options += `<option value="${rubrique.id}">${rubrique.nom}</option>`;
+          });
+          $('#rubriqueSelect').html(options);
+        },
+        error: function() {
+          alert("Erreur lors du chargement des rubriques.");
+        }
+      });
+    }
+
+    // Charger la liste des syllabus existants
+    function loadSyllabus() {
+      $.ajax({
+        url: 'http://localhost:9000/api/syllabus', // Adapté à votre API de syllabus
+        type: 'GET',
+        success: function(response) {
+          let rows = "";
+          response.forEach((syllabus, index) => {
+            rows += `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${syllabus.rubriqueUnite.nom}</td>
+                <td>${syllabus.anneeAcademique}</td>
+                <td>${syllabus.contenu}</td>
+                <td>
+                  <button class="btn btn-info btn-sm" onclick="editSyllabus(${syllabus.id})">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteSyllabus(${syllabus.id})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+          $('#syllabusTableBody').html(rows);
+        },
+        error: function() {
+          alert("Erreur lors du chargement des syllabus.");
+        }
+      });
+    }
+
+    // Ajouter ou modifier un syllabus
+    $('#syllabusForm').on('submit', function(event) {
+      event.preventDefault();
+      const syllabusId = $('#syllabusId').val();
+      const rubriqueId = $('#rubriqueSelect').val();
+      const anneeAcademique = $('#anneeAcademique').val();
+      const contenu = $('#contenu').val();
+
+      const syllabusData = {
+        rubriqueUnite: { id: rubriqueId },
+        anneeAcademique: anneeAcademique,
+        contenu: contenu
+      };
+
+      // Si un syllabusId est présent, on effectue une modification (PUT) sinon une création (POST)
+      const ajaxOptions = {
+        url: 'http://localhost:9000/api/syllabus' + (syllabusId ? '/' + syllabusId : ''),
+        type: syllabusId ? 'PUT' : 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(syllabusData),
+        success: function(response) {
+          alert("Opération réussie.");
+          $('#syllabusForm')[0].reset();
+          $('#syllabusId').val('');
+          loadSyllabus();
+        },
+        error: function() {
+          alert("Erreur lors de l'opération sur le syllabus.");
+        }
+      };
+      $.ajax(ajaxOptions);
+    });
+
+    // Fonction pour éditer un syllabus
+    function editSyllabus(id) {
+      $.ajax({
+        url: `http://localhost:9000/api/syllabus/${id}`,
+        type: 'GET',
+        success: function(syllabus) {
+          // Remplir le formulaire avec les données existantes pour modification
+          $('#syllabusId').val(syllabus.id);
+          $('#rubriqueSelect').val(syllabus.rubriqueUnite.id);
+          $('#anneeAcademique').val(syllabus.anneeAcademique);
+          $('#contenu').val(syllabus.contenu);
+          window.scrollTo(0,0);
+        },
+        error: function() {
+          alert("Erreur lors de la récupération du syllabus.");
+        }
+      });
+    }
+
+    // Fonction pour supprimer un syllabus
+    function deleteSyllabus(id) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer ce syllabus ?")) {
+        $.ajax({
+          url: `http://localhost:9000/api/syllabus/${id}`,
+          type: 'DELETE',
+          success: function(response) {
+            alert("Syllabus supprimé avec succès.");
+            loadSyllabus();
+          },
+          error: function() {
+            alert("Erreur lors de la suppression du syllabus.");
+          }
+        });
+      }
+    }
+
+    // Chargement initial
+    $(document).ready(function() {
+      loadRubriques();
+      loadSyllabus();
+    });
+  </script>
+</body>
+</html>

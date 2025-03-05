@@ -1,0 +1,77 @@
+<aside id="sidebar" class="bg-light border-end">
+    <div class="sidebar-header text-center py-3">
+        <h4 class="fw-bold">Menu</h4>
+    </div>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="dashboard.html">
+                <i class="fas fa-home me-2"></i> Tableau de Bord
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="pages/programmes.html">
+                <i class="fas fa-book me-2"></i> Programmes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="pages/syllabus.html">
+                <i class="fas fa-file-alt me-2"></i> Syllabus
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="pages/fiches-academiques.html">
+                <i class="fas fa-folder me-2"></i> Fiches Académiques
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="pages/utilisateurs.html">
+                <i class="fas fa-users me-2"></i> Utilisateurs
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="pages/contact.html">
+                <i class="fas fa-envelope me-2"></i> Contact
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<style>
+    #sidebar {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding-top: 56px; /* Ajustement pour éviter le chevauchement avec le header */
+        overflow-y: auto;
+    }
+
+    .nav-link {
+        color: #333;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+    }
+
+    /* Adaptation mobile */
+    @media (max-width: 992px) {
+        #sidebar {
+            width: 220px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            padding-top: 0;
+        }
+    }
+</style>
